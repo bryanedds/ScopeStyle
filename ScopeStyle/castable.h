@@ -50,7 +50,7 @@ void initialize_castable(
     const char* (*get_type_name)(struct castable*),
     void* (*try_cast)(struct castable*, const char*));
 
-#define CASTABLE_TAG 1929451278
+#define CASTABLE_TAG 0xAB3A3854 // CRC32 hash of 'castable'
 
 ///////////////////////////////////////////////////////////////////////////////
 /// Casting utility functions.
