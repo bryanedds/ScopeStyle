@@ -33,7 +33,7 @@ void initialize_equatable(struct equatable*);
 struct castable;
 const char* get_type_name(struct castable*);
 void* try_cast(struct castable*, const char*);
-void* cast(struct castable*, const char*);
+void* force_cast(struct castable*, const char*);
 struct castable
 {
     struct equatable equatable_p;
@@ -46,6 +46,10 @@ inline struct equatable* to_equatable_from_castable(struct castable* castable) {
 ///////////////////////////////////////////////////////////////////////////////
 /// Utility functions. TODO: find a better place for this.
 ///////////////////////////////////////////////////////////////////////////////
+
+/// Cast any castable to the expected type.
+/// Should be statically-verifiable for castables using a custom analysis tool.
+inline void* up_cast(void* ptr) { return (void*)ptr; };
 
 /// Hashes a pointer.
 int hash_ptr(void*);

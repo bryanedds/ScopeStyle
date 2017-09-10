@@ -4,7 +4,7 @@
 
 // struct simulant
 
-static const char* get_type_name_simulant(struct castable* _)
+static const char* get_type_name_simulant(struct castable* castable)
 {
     return "simulant";
 }
@@ -32,7 +32,7 @@ void initialize_simulant(struct simulant* simulant, const char* name)
 
 // struct entity
 
-static const char* get_type_name_entity(struct castable* _)
+static const char* get_type_name_entity(struct castable* castable)
 {
     return "entity";
 }
@@ -61,7 +61,7 @@ void initialize_entity(struct entity* entity, const char* name)
 
 // struct button
 
-static const char* get_type_name_button(struct castable* _)
+static const char* get_type_name_button(struct castable* castable)
 {
     return "button";
 }
@@ -86,7 +86,7 @@ void initialize_button(struct button* button, const char* name, void(*click_opt)
 
 // struct screen
 
-static const char* get_type_name_screen(struct castable* _)
+static const char* get_type_name_screen(struct castable* castable)
 {
     return "screen";
 }
@@ -114,7 +114,7 @@ void initialize_screen(struct screen* screen, const char* name)
 
 // struct title_screen
 
-static const char* get_type_name_title_screen(struct castable* _)
+static const char* get_type_name_title_screen(struct castable* castable)
 {
     return "title_screen";
 }
@@ -138,7 +138,7 @@ void initialize_title_screen(struct title_screen* title_screen, const char* name
 
 // struct gameplay_screen
 
-static const char* get_type_name_gameplay_screen(struct castable* _)
+static const char* get_type_name_gameplay_screen(struct castable* castable)
 {
     return "gameplay_screen";
 }
@@ -186,7 +186,7 @@ void get_screens_world(struct world* world, struct screen screens[WORLD_SCREEN_C
 void update_world(struct world* world, struct error* err)
 {
     integrate_physics_engine(world->physics_engine_p);
-    // ...and update entities...
+    // ...and update simulants
     render_renderer(world->renderer_p);
 }
 

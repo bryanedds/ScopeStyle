@@ -44,7 +44,7 @@ void initialize_equatable(struct equatable* equatable)
 
 // struct castable
 
-static const char* get_type_name_castable(struct castable* _)
+static const char* get_type_name_castable(struct castable* castable)
 {
     return "castable";
 }
@@ -66,7 +66,7 @@ void* try_cast(struct castable* castable, const char* type_name)
     return castable->try_cast_c(castable, type_name);
 }
 
-void* cast(struct castable* castable, const char* type_name)
+void* force_cast(struct castable* castable, const char* type_name)
 {
     void* result = try_cast(castable, type_name);
     if (castable == NULL) fatal_error("Invalid cast.");
