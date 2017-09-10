@@ -27,10 +27,9 @@ struct simulant
     struct castable castable_p;
 
     /// The name of a simulant.
-    char name_p[SIMULANT_NAME_MAX];
+    char name_r[SIMULANT_NAME_MAX];
 };
 
-const char* get_name(struct simulant* simulant);
 void initialize_simulant(struct simulant* simulant, const char* (*get_type_name)(struct castable*), void* (*try_cast)(struct castable*, const char*), const char* name);
 
 /// An entity type, such as for buttons or characters.

@@ -4,11 +4,6 @@
 
 // struct simulant
 
-const char* get_name(struct simulant* simulant)
-{
-    return simulant->name_p;
-}
-
 void initialize_simulant(
     struct simulant* simulant,
     const char* (*get_type_name)(struct castable*),
@@ -16,7 +11,7 @@ void initialize_simulant(
     const char* name)
 {
     initialize_castable(&simulant->castable_p, get_type_name, try_cast);
-    strncpy(simulant->name_p, name, SIMULANT_NAME_MAX);
+    strncpy(simulant->name_r, name, SIMULANT_NAME_MAX);
 }
 
 // struct entity
