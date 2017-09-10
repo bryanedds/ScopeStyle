@@ -24,7 +24,7 @@ struct world;
 struct simulant
 {
     /// Simulants are castable (in fact, they will be reflectable when that functionality is devised).
-    struct castable castable;
+    struct castable castable_p;
 
     /// The name of a simulant.
     char name_p[SIMULANT_NAME_MAX];
@@ -36,7 +36,7 @@ void initialize_simulant(struct simulant* simulant, const char* (*get_type_name)
 /// An entity type, such as for buttons or characters.
 struct entity
 {
-    struct simulant simulant;
+    struct simulant simulant_p;
     int visible;
 };
 
@@ -45,7 +45,7 @@ void initialize_entity(struct entity* entity, const char* (*get_type_name)(struc
 /// A clickable button.
 struct button
 {
-    struct entity entity;
+    struct entity entity_p;
     void (*click_opt)(struct button*, struct world*); // the 'opt' suffix means the pointer may be null.
 };
 
@@ -54,7 +54,7 @@ void initialize_button(struct button* button, const char* name, void (*click_opt
 /// A player character.
 struct player
 {
-    struct entity entity;
+    struct entity entity_p;
     int health;
 };
 
@@ -63,7 +63,7 @@ void initialize_player(struct player* player, const char* name, int health);
 /// Represents interactive screens, such as a title screen or a gameplay screen.
 struct screen
 {
-    struct simulant simulant;
+    struct simulant simulant_p;
 };
 
 void initialize_screen(struct screen* screen, const char* (*get_type_name)(struct castable*), void* (*try_cast)(struct castable*, const char*), const char* name);
@@ -71,7 +71,7 @@ void initialize_screen(struct screen* screen, const char* (*get_type_name)(struc
 /// The simulation's title screen.
 struct title_screen
 {
-    struct screen screen;
+    struct screen screen_p;
 };
 
 void initialize_title_screen(struct title_screen* title_screen, const char* name);
@@ -79,7 +79,7 @@ void initialize_title_screen(struct title_screen* title_screen, const char* name
 /// The simulation's gameplay screen.
 struct gameplay_screen
 {
-    struct screen screen;
+    struct screen screen_p;
 };
 
 void initialize_gameplay_screen(struct gameplay_screen* gameplay_screen, const char* name);
