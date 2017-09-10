@@ -154,7 +154,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="category.c" />
+    <ClCompile Include="castable.c" />
     <ClCompile Include="malloc_safe.c" />
     <ClCompile Include="error.c" />
     <ClCompile Include="main.c" />
@@ -163,7 +163,7 @@
     <ClCompile Include="world.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="category.h" />
+    <ClInclude Include="castable.h" />
     <ClInclude Include="malloc_safe.h" />
     <ClInclude Include="error.h" />
     <ClInclude Include="physics_engine.h" />

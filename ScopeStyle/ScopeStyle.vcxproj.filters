@@ -33,7 +33,7 @@
     <ClCompile Include="world.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="category.c">
+    <ClCompile Include="castable.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -53,7 +53,7 @@
     <ClInclude Include="world.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="category.h">
+    <ClInclude Include="castable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

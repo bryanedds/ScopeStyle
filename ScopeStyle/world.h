@@ -4,7 +4,7 @@
 #include <stdbool.h>
 
 #include "error.h"
-#include "category.h"
+#include "castable.h"
 #include "renderer.h"
 #include "physics_engine.h"
 
@@ -24,7 +24,7 @@ struct world;
 struct simulant
 {
     /// Simulants are castable (in fact, they will be reflectable when that functionality is devised).
-    struct castable castable_p;
+    struct castable castable;
 
     /// The name of a simulant.
     /// The 'c' suffix means the field will never be changed after initialization.
@@ -32,62 +32,60 @@ struct simulant
 };
 
 const char* get_name_simulant(struct simulant* simulant);
-void initialize_simulant(struct simulant* simulant, const char* name);
-inline struct castable* to_castable_from_simulant(struct simulant* simulant) { return &simulant->castable_p; }
-inline struct equatable* to_equatable_from_simulant(struct simulant* simulant) { return to_equatable_from_castable(&simulant->castable_p); }
+void initialize_simulant(struct simulant* simulant, const char* (*get_type_name)(struct castable*), void* (*try_cast)(struct castable*, const char*), const char* name);
 
 /// An entity type, such as for buttons or characters.
 struct entity
 {
-    struct simulant simulant_p;
+    struct simulant simulant;
     int visible;
 };
 
 const char* get_name_entity(struct entity* entity);
-void initialize_entity(struct entity* entity, const char* name);
-inline struct simulant* to_simulant_from_entity(struct entity* entity) { return &entity->simulant_p; }
-inline struct castable* to_castable_from_entity(struct entity* entity) { return to_castable_from_simulant(&entity->simulant_p); }
-inline struct equatable* to_equatable_from_entity(struct entity* entity) { return to_equatable_from_simulant(&entity->simulant_p); }
+void initialize_entity(struct entity* entity, const char* (*get_type_name)(struct castable*), void* (*try_cast)(struct castable*, const char*), const char* name);
 
 /// A clickable button.
 struct button
 {
-    struct entity entity_p;
+    struct entity entity;
     void (*click_opt)(struct button*, struct world*); // the 'opt' suffix means the pointer may be null.
 };
 
 void initialize_button(struct button* button, const char* name, void (*click_opt)(struct button*, struct world*));
-inline struct entity* to_entity_from_button(struct button* button) { return &button->entity_p; }
+
+/// A player character.
+struct player
+{
+    struct entity entity;
+    int health;
+};
+
+void initialize_player(struct player* player, const char* name, int health);
 
 /// Represents interactive screens, such as a title screen or a gameplay screen.
 struct screen
 {
-    struct simulant simulant_p;
+    struct simulant simulant;
 };
 
 const char* get_name_screen(struct screen* screen);
-void initialize_screen(struct screen* screen, const char* name);
-inline struct simulant* to_simulant_from_screen(struct screen* screen) { return &screen->simulant_p; }
-inline struct castable* to_castable_from_screen(struct screen* screen) { return to_castable_from_simulant(&screen->simulant_p); }
-inline struct equatable* to_equatable_from_screen(struct screen* screen) { return to_equatable_from_simulant(&screen->simulant_p); }
+void initialize_screen(struct screen* screen, const char* (*get_type_name)(struct castable*), void* (*try_cast)(struct castable*, const char*), const char* name);
 
 /// The simulation's title screen.
 struct title_screen
 {
-    struct screen screen_p;
+    struct screen screen;
 };
 
 void initialize_title_screen(struct title_screen* title_screen, const char* name);
-inline struct screen* to_screen_from_title_screen(struct title_screen* title_screen) { return &title_screen->screen_p; }
 
 /// The simulation's gameplay screen.
 struct gameplay_screen
 {
-    struct screen screen_p;
+    struct screen screen;
 };
 
 void initialize_gameplay_screen(struct gameplay_screen* gameplay_screen, const char* name);
-inline struct screen* to_screen_from_gameplay_screen(struct gameplay_screen* gameplay_screen) { return &gameplay_screen->screen_p; }
 
 /// The number of screens in the world.
 #define WORLD_SCREEN_COUNT 2
@@ -103,7 +101,7 @@ struct world
     struct button title_exit_button_p;
     struct button title_play_button_p;
     struct button gameplay_stop_button_p;
-    struct entity player_p;
+    struct player player_p;
     struct screen* selected_screen_p;
 };
 

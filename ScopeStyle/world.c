@@ -4,58 +4,35 @@
 
 // struct simulant
 
-static const char* get_type_name_simulant(struct castable* castable)
-{
-    return "simulant";
-}
-
-static void* try_cast_simulant(struct castable* castable, const char* type_name)
-{
-    if (strcmp(type_name, "equatable") == 0) return castable;
-    if (strcmp(type_name, "castable") == 0) return castable;
-    if (strcmp(type_name, "simulant") == 0) return castable;
-    return NULL;
-}
-
 const char* get_name_simulant(struct simulant* simulant)
 {
     return simulant->name_c;
 }
 
-void initialize_simulant(struct simulant* simulant, const char* name)
+void initialize_simulant(
+    struct simulant* simulant,
+    const char* (*get_type_name)(struct castable*),
+    void* (*try_cast)(struct castable*, const char*),
+    const char* name)
 {
-    initialize_equatable(&simulant->castable_p.equatable_p);
-    simulant->castable_p.get_type_name_c = get_type_name_simulant;
-    simulant->castable_p.try_cast_c = try_cast_simulant;
+    initialize_castable(&simulant->castable, get_type_name, try_cast);
     strncpy(simulant->name_c, name, SIMULANT_NAME_MAX);
 }
 
 // struct entity
 
-static const char* get_type_name_entity(struct castable* castable)
-{
-    return "entity";
-}
-
-static void* try_cast_entity(struct castable* castable, const char* type_name)
-{
-    if (strcmp(type_name, "equatable") == 0) return castable;
-    if (strcmp(type_name, "castable") == 0) return castable;
-    if (strcmp(type_name, "simulant") == 0) return castable;
-    if (strcmp(type_name, "entity") == 0) return castable;
-    return NULL;
-}
-
 const char* get_name_entity(struct entity* entity)
 {
-    return get_name_simulant(&entity->simulant_p);
+    return get_name_simulant(&entity->simulant);
 }
 
-void initialize_entity(struct entity* entity, const char* name)
+void initialize_entity(
+    struct entity* entity,
+    const char* (*get_type_name)(struct castable*),
+    void* (*try_cast)(struct castable*, const char*),
+    const char* name)
 {
-    initialize_simulant(&entity->simulant_p, name);
-    entity->simulant_p.castable_p.get_type_name_c = get_type_name_entity;
-    entity->simulant_p.castable_p.try_cast_c = try_cast_entity;
+    initialize_simulant(&entity->simulant, get_type_name, try_cast, name);
     entity->visible = true;
 }
 
@@ -78,38 +55,43 @@ static void* try_cast_button(struct castable* castable, const char* type_name)
 
 void initialize_button(struct button* button, const char* name, void(*click_opt)(struct button*, struct world*))
 {
-    initialize_entity(&button->entity_p, name);
-    button->entity_p.simulant_p.castable_p.get_type_name_c = get_type_name_button;
-    button->entity_p.simulant_p.castable_p.try_cast_c = try_cast_button;
+    initialize_entity(&button->entity, get_type_name_button, try_cast_button, name);
     button->click_opt = click_opt;
 }
 
-// struct screen
+// struct player
 
-static const char* get_type_name_screen(struct castable* castable)
+static const char* get_type_name_player(struct castable* castable)
 {
-    return "screen";
+    return "player";
 }
 
-static void* try_cast_screen(struct castable* castable, const char* type_name)
+static void* try_cast_player(struct castable* castable, const char* type_name)
 {
     if (strcmp(type_name, "equatable") == 0) return castable;
     if (strcmp(type_name, "castable") == 0) return castable;
     if (strcmp(type_name, "simulant") == 0) return castable;
-    if (strcmp(type_name, "screen") == 0) return castable;
+    if (strcmp(type_name, "entity") == 0) return castable;
+    if (strcmp(type_name, "player") == 0) return castable;
     return NULL;
 }
 
-const char* get_name_screen(struct screen* screen)
+void initialize_player(struct player* player, const char* name, int health)
 {
-    return get_name_simulant(&screen->simulant_p);
+    initialize_entity(&player->entity, get_type_name_player, try_cast_player, name);
+    player->health = health;
 }
 
-void initialize_screen(struct screen* screen, const char* name)
+// struct screen
+
+const char* get_name_screen(struct screen* screen)
 {
-    initialize_simulant(&screen->simulant_p, name);
-    screen->simulant_p.castable_p.get_type_name_c = get_type_name_screen;
-    screen->simulant_p.castable_p.try_cast_c = try_cast_screen;
+    return get_name_simulant(&screen->simulant);
+}
+
+void initialize_screen(struct screen* screen, const char* (*get_type_name)(struct castable*), void* (*try_cast)(struct castable*, const char*), const char* name)
+{
+    initialize_simulant(&screen->simulant, get_type_name, try_cast, name);
 }
 
 // struct title_screen
@@ -121,7 +103,6 @@ static const char* get_type_name_title_screen(struct castable* castable)
 
 static void* try_cast_title_screen(struct castable* castable, const char* type_name)
 {
-    if (strcmp(type_name, "equatable") == 0) return castable;
     if (strcmp(type_name, "castable") == 0) return castable;
     if (strcmp(type_name, "simulant") == 0) return castable;
     if (strcmp(type_name, "entity") == 0) return castable;
@@ -131,9 +112,7 @@ static void* try_cast_title_screen(struct castable* castable, const char* type_n
 
 void initialize_title_screen(struct title_screen* title_screen, const char* name)
 {
-    initialize_screen(&title_screen->screen_p, name);
-    title_screen->screen_p.simulant_p.castable_p.get_type_name_c = get_type_name_title_screen;
-    title_screen->screen_p.simulant_p.castable_p.try_cast_c = try_cast_title_screen;
+    initialize_screen(&title_screen->screen, get_type_name_title_screen, try_cast_title_screen, name);
 }
 
 // struct gameplay_screen
@@ -145,7 +124,6 @@ static const char* get_type_name_gameplay_screen(struct castable* castable)
 
 static void* try_cast_gameplay_screen(struct castable* castable, const char* type_name)
 {
-    if (strcmp(type_name, "equatable") == 0) return castable;
     if (strcmp(type_name, "castable") == 0) return castable;
     if (strcmp(type_name, "simulant") == 0) return castable;
     if (strcmp(type_name, "entity") == 0) return castable;
@@ -155,9 +133,7 @@ static void* try_cast_gameplay_screen(struct castable* castable, const char* typ
 
 void initialize_gameplay_screen(struct gameplay_screen* gameplay_screen, const char* name)
 {
-    initialize_screen(&gameplay_screen->screen_p, name);
-    gameplay_screen->screen_p.simulant_p.castable_p.get_type_name_c = get_type_name_gameplay_screen;
-    gameplay_screen->screen_p.simulant_p.castable_p.try_cast_c = try_cast_gameplay_screen;
+    initialize_screen(&gameplay_screen->screen, get_type_name_gameplay_screen, try_cast_gameplay_screen, name);
 }
 
 // struct world
@@ -179,8 +155,8 @@ static void gameplay_stop_button_click(struct button* button, struct world* worl
 
 void get_screens_world(struct world* world, struct screen screens[WORLD_SCREEN_COUNT])
 {
-    screens[0] = world->title_screen_p.screen_p;
-    screens[1] = world->gameplay_screen_p.screen_p;
+    screens[0] = world->title_screen_p.screen;
+    screens[1] = world->gameplay_screen_p.screen;
 }
 
 void update_world(struct world* world, struct error* err)
@@ -199,8 +175,8 @@ void initialize_world(struct world* world, struct renderer* renderer, struct phy
     initialize_button(&world->title_exit_button_p, "title/exit", title_exit_button_click);
     initialize_button(&world->title_play_button_p, "title/play", title_play_button_click);
     initialize_button(&world->gameplay_stop_button_p, "gamplay/stop", gameplay_stop_button_click);
-    initialize_entity(&world->player_p, "player");
-    world->selected_screen_p = &world->title_screen_p.screen_p;
+    initialize_player(&world->player_p, "gameplay/player", 10);
+    world->selected_screen_p = &world->title_screen_p.screen;
 }
 
 void finalize_world(struct world* world)
