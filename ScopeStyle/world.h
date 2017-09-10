@@ -64,6 +64,7 @@ void initialize_player(struct player* player, const char* name, int health);
 struct screen
 {
     struct simulant simulant_p;
+    // assume some screen-specific implementation...
 };
 
 void initialize_screen(struct screen* screen, const char* (*get_type_name)(struct castable*), void* (*try_cast)(struct castable*, const char*), const char* name);
@@ -72,6 +73,7 @@ void initialize_screen(struct screen* screen, const char* (*get_type_name)(struc
 struct title_screen
 {
     struct screen screen_p;
+    // assume some title screen-specific implementation...
 };
 
 void initialize_title_screen(struct title_screen* title_screen, const char* name);
@@ -80,6 +82,7 @@ void initialize_title_screen(struct title_screen* title_screen, const char* name
 struct gameplay_screen
 {
     struct screen screen_p;
+    // assume some gameplay screen-specific implementation...
 };
 
 void initialize_gameplay_screen(struct gameplay_screen* gameplay_screen, const char* name);
