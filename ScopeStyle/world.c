@@ -4,6 +4,11 @@
 
 // struct simulant
 
+const char* get_name(struct simulant* simulant)
+{
+    return simulant->name_r;
+}
+
 void initialize_simulant(
     struct simulant* simulant,
     const char* (*get_type_name)(struct castable*),
@@ -15,6 +20,11 @@ void initialize_simulant(
 }
 
 // struct entity
+
+bool get_visible(struct entity* entity)
+{
+    return entity->visible;
+}
 
 void initialize_entity(
     struct entity* entity,
