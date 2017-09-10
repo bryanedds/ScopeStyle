@@ -27,11 +27,10 @@ struct simulant
     struct castable castable;
 
     /// The name of a simulant.
-    /// The 'c' suffix means the field will never be changed after initialization.
-    char name_c[SIMULANT_NAME_MAX];
+    char name_p[SIMULANT_NAME_MAX];
 };
 
-const char* get_name_simulant(struct simulant* simulant);
+const char* get_name(struct simulant* simulant);
 void initialize_simulant(struct simulant* simulant, const char* (*get_type_name)(struct castable*), void* (*try_cast)(struct castable*, const char*), const char* name);
 
 /// An entity type, such as for buttons or characters.
@@ -41,7 +40,6 @@ struct entity
     int visible;
 };
 
-const char* get_name_entity(struct entity* entity);
 void initialize_entity(struct entity* entity, const char* (*get_type_name)(struct castable*), void* (*try_cast)(struct castable*, const char*), const char* name);
 
 /// A clickable button.
@@ -68,7 +66,6 @@ struct screen
     struct simulant simulant;
 };
 
-const char* get_name_screen(struct screen* screen);
 void initialize_screen(struct screen* screen, const char* (*get_type_name)(struct castable*), void* (*try_cast)(struct castable*, const char*), const char* name);
 
 /// The simulation's title screen.

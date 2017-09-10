@@ -4,9 +4,9 @@
 
 // struct simulant
 
-const char* get_name_simulant(struct simulant* simulant)
+const char* get_name(struct simulant* simulant)
 {
-    return simulant->name_c;
+    return simulant->name_p;
 }
 
 void initialize_simulant(
@@ -16,15 +16,10 @@ void initialize_simulant(
     const char* name)
 {
     initialize_castable(&simulant->castable, get_type_name, try_cast);
-    strncpy(simulant->name_c, name, SIMULANT_NAME_MAX);
+    strncpy(simulant->name_p, name, SIMULANT_NAME_MAX);
 }
 
 // struct entity
-
-const char* get_name_entity(struct entity* entity)
-{
-    return get_name_simulant(&entity->simulant);
-}
 
 void initialize_entity(
     struct entity* entity,
@@ -83,11 +78,6 @@ void initialize_player(struct player* player, const char* name, int health)
 }
 
 // struct screen
-
-const char* get_name_screen(struct screen* screen)
-{
-    return get_name_simulant(&screen->simulant);
-}
 
 void initialize_screen(struct screen* screen, const char* (*get_type_name)(struct castable*), void* (*try_cast)(struct castable*, const char*), const char* name)
 {
