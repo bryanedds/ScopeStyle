@@ -60,7 +60,7 @@ void initialize_castable(
 bool is_castable(void* ptr);
 
 /// Up-cast any castable to the expected pointer type.
-/// Should be statically-verifiable when using a custom static analysis rule.
+/// Should be statically-verifiable when using a custom static code analysis rule.
 void* up_cast(void* ptr);
 
 /// Hashes a pointer.
