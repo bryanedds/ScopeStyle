@@ -75,7 +75,7 @@ void* cast(struct castable* castable, const char* type_name)
 
 void initialize_castable(struct castable* castable)
 {
-    initialize_equatable(&castable->equatable);
+    initialize_equatable(&castable->equatable_p);
     castable->get_type_name_c = get_type_name_castable;
     castable->try_cast_c = try_cast_castable;
 }

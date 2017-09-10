@@ -10,7 +10,7 @@
 struct error
 {
     /// The current error message.
-    /// The 'r' suffix denotes that the field is read-only outside of error.c.
+    /// The 'r' suffix denotes that the field is read-only outside of error.h or error.c.
     char msg_r[ERROR_MSG_MAX];
 
     /// The current error code.

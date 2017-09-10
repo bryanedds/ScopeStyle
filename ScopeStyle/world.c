@@ -24,9 +24,9 @@ const char* get_name_simulant(struct simulant* simulant)
 
 void initialize_simulant(struct simulant* simulant, const char* name)
 {
-    initialize_equatable(&simulant->castable.equatable);
-    simulant->castable.get_type_name_c = get_type_name_simulant;
-    simulant->castable.try_cast_c = try_cast_simulant;
+    initialize_equatable(&simulant->castable_p.equatable_p);
+    simulant->castable_p.get_type_name_c = get_type_name_simulant;
+    simulant->castable_p.try_cast_c = try_cast_simulant;
     strncpy(simulant->name_c, name, SIMULANT_NAME_MAX);
 }
 
@@ -48,14 +48,14 @@ static void* try_cast_entity(struct castable* castable, const char* type_name)
 
 const char* get_name_entity(struct entity* entity)
 {
-    return get_name_simulant(&entity->simulant);
+    return get_name_simulant(&entity->simulant_p);
 }
 
 void initialize_entity(struct entity* entity, const char* name)
 {
-    initialize_simulant(&entity->simulant, name);
-    entity->simulant.castable.get_type_name_c = get_type_name_entity;
-    entity->simulant.castable.try_cast_c = try_cast_entity;
+    initialize_simulant(&entity->simulant_p, name);
+    entity->simulant_p.castable_p.get_type_name_c = get_type_name_entity;
+    entity->simulant_p.castable_p.try_cast_c = try_cast_entity;
     entity->visible = true;
 }
 
@@ -78,9 +78,9 @@ static void* try_cast_button(struct castable* castable, const char* type_name)
 
 void initialize_button(struct button* button, const char* name, void(*click_opt)(struct button*, struct world*))
 {
-    initialize_entity(&button->entity, name);
-    button->entity.simulant.castable.get_type_name_c = get_type_name_button;
-    button->entity.simulant.castable.try_cast_c = try_cast_button;
+    initialize_entity(&button->entity_p, name);
+    button->entity_p.simulant_p.castable_p.get_type_name_c = get_type_name_button;
+    button->entity_p.simulant_p.castable_p.try_cast_c = try_cast_button;
     button->click_opt = click_opt;
 }
 
@@ -102,14 +102,14 @@ static void* try_cast_screen(struct castable* castable, const char* type_name)
 
 const char* get_name_screen(struct screen* screen)
 {
-    return get_name_simulant(&screen->simulant);
+    return get_name_simulant(&screen->simulant_p);
 }
 
 void initialize_screen(struct screen* screen, const char* name)
 {
-    initialize_simulant(&screen->simulant, name);
-    screen->simulant.castable.get_type_name_c = get_type_name_screen;
-    screen->simulant.castable.try_cast_c = try_cast_screen;
+    initialize_simulant(&screen->simulant_p, name);
+    screen->simulant_p.castable_p.get_type_name_c = get_type_name_screen;
+    screen->simulant_p.castable_p.try_cast_c = try_cast_screen;
 }
 
 // struct title_screen
@@ -131,9 +131,9 @@ static void* try_cast_title_screen(struct castable* castable, const char* type_n
 
 void initialize_title_screen(struct title_screen* title_screen, const char* name)
 {
-    initialize_screen(&title_screen->screen, name);
-    title_screen->screen.simulant.castable.get_type_name_c = get_type_name_title_screen;
-    title_screen->screen.simulant.castable.try_cast_c = try_cast_title_screen;
+    initialize_screen(&title_screen->screen_p, name);
+    title_screen->screen_p.simulant_p.castable_p.get_type_name_c = get_type_name_title_screen;
+    title_screen->screen_p.simulant_p.castable_p.try_cast_c = try_cast_title_screen;
 }
 
 // struct gameplay_screen
@@ -155,9 +155,9 @@ static void* try_cast_gameplay_screen(struct castable* castable, const char* typ
 
 void initialize_gameplay_screen(struct gameplay_screen* gameplay_screen, const char* name)
 {
-    initialize_screen(&gameplay_screen->screen, name);
-    gameplay_screen->screen.simulant.castable.get_type_name_c = get_type_name_gameplay_screen;
-    gameplay_screen->screen.simulant.castable.try_cast_c = try_cast_gameplay_screen;
+    initialize_screen(&gameplay_screen->screen_p, name);
+    gameplay_screen->screen_p.simulant_p.castable_p.get_type_name_c = get_type_name_gameplay_screen;
+    gameplay_screen->screen_p.simulant_p.castable_p.try_cast_c = try_cast_gameplay_screen;
 }
 
 // struct world
@@ -179,8 +179,8 @@ static void gameplay_stop_button_click(struct button* button, struct world* worl
 
 void get_screens_world(struct world* world, struct screen screens[WORLD_SCREEN_COUNT])
 {
-    screens[0] = world->title_screen_p.screen;
-    screens[1] = world->gameplay_screen_p.screen;
+    screens[0] = world->title_screen_p.screen_p;
+    screens[1] = world->gameplay_screen_p.screen_p;
 }
 
 void update_world(struct world* world, struct error* err)
@@ -200,7 +200,7 @@ void initialize_world(struct world* world, struct renderer* renderer, struct phy
     initialize_button(&world->title_play_button_p, "title/play", title_play_button_click);
     initialize_button(&world->gameplay_stop_button_p, "gamplay/stop", gameplay_stop_button_click);
     initialize_entity(&world->player_p, "player");
-    world->selected_screen_p = &world->title_screen_p.screen;
+    world->selected_screen_p = &world->title_screen_p.screen_p;
 }
 
 void finalize_world(struct world* world)

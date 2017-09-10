@@ -21,32 +21,33 @@ struct equatable;
 bool equal_to(struct equatable*, struct equatable*);
 bool try_copy_to(struct equatable*, struct equatable*);
 int hash(struct equatable*);
-void initialize_equatable(struct equatable*);
 struct equatable
 {
     bool (*equal_to_c)(struct equatable*, struct equatable*);
     bool (*try_copy_to_c)(struct equatable*, struct equatable*);
     int (*hash_c)(struct equatable*);
 };
+void initialize_equatable(struct equatable*);
 
 /// The category of abstractions with dynamic sub-typing.
 struct castable;
 const char* get_type_name(struct castable*);
 void* try_cast(struct castable*, const char*);
 void* cast(struct castable*, const char*);
-void initialize_castable(struct castable*);
 struct castable
 {
-    struct equatable equatable;
+    struct equatable equatable_p;
     const char* (*get_type_name_c)(struct castable*);
     void* (*try_cast_c)(struct castable*, const char*);
 };
+void initialize_castable(struct castable*);
+inline struct equatable* to_equatable_from_castable(struct castable* castable) { return &castable->equatable_p; }
 
 ///////////////////////////////////////////////////////////////////////////////
 /// Utility functions. TODO: find a better place for this.
 ///////////////////////////////////////////////////////////////////////////////
 
 /// Hashes a pointer.
-int hash_ptr(void* ptr);
+int hash_ptr(void*);
 
 #endif

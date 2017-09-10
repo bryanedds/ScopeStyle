@@ -24,7 +24,7 @@ struct world;
 struct simulant
 {
     /// Simulants are castable (in fact, they will be reflectable when that functionality is devised).
-    struct castable castable;
+    struct castable castable_p;
 
     /// The name of a simulant.
     /// The 'c' suffix means the field will never be changed after initialization.
@@ -33,50 +33,61 @@ struct simulant
 
 const char* get_name_simulant(struct simulant* simulant);
 void initialize_simulant(struct simulant* simulant, const char* name);
+inline struct castable* to_castable_from_simulant(struct simulant* simulant) { return &simulant->castable_p; }
+inline struct equatable* to_equatable_from_simulant(struct simulant* simulant) { return to_equatable_from_castable(&simulant->castable_p); }
 
 /// An entity type, such as for buttons or characters.
 struct entity
 {
-    struct simulant simulant;
+    struct simulant simulant_p;
     int visible;
 };
 
 const char* get_name_entity(struct entity* entity);
 void initialize_entity(struct entity* entity, const char* name);
+inline struct simulant* to_simulant_from_entity(struct entity* entity) { return &entity->simulant_p; }
+inline struct castable* to_castable_from_entity(struct entity* entity) { return to_castable_from_simulant(&entity->simulant_p); }
+inline struct equatable* to_equatable_from_entity(struct entity* entity) { return to_equatable_from_simulant(&entity->simulant_p); }
 
 /// A clickable button.
 struct button
 {
-    struct entity entity;
+    struct entity entity_p;
     void (*click_opt)(struct button*, struct world*); // the 'opt' suffix means the pointer may be null.
 };
 
 void initialize_button(struct button* button, const char* name, void (*click_opt)(struct button*, struct world*));
+inline struct entity* to_entity_from_button(struct button* button) { return &button->entity_p; }
 
 /// Represents interactive screens, such as a title screen or a gameplay screen.
 struct screen
 {
-    struct simulant simulant;
+    struct simulant simulant_p;
 };
 
 const char* get_name_screen(struct screen* screen);
 void initialize_screen(struct screen* screen, const char* name);
+inline struct simulant* to_simulant_from_screen(struct screen* screen) { return &screen->simulant_p; }
+inline struct castable* to_castable_from_screen(struct screen* screen) { return to_castable_from_simulant(&screen->simulant_p); }
+inline struct equatable* to_equatable_from_screen(struct screen* screen) { return to_equatable_from_simulant(&screen->simulant_p); }
 
 /// The simulation's title screen.
 struct title_screen
 {
-    struct screen screen;
+    struct screen screen_p;
 };
 
 void initialize_title_screen(struct title_screen* title_screen, const char* name);
+inline struct screen* to_screen_from_title_screen(struct title_screen* title_screen) { return &title_screen->screen_p; }
 
 /// The simulation's gameplay screen.
 struct gameplay_screen
 {
-    struct screen screen;
+    struct screen screen_p;
 };
 
 void initialize_gameplay_screen(struct gameplay_screen* gameplay_screen, const char* name);
+inline struct screen* to_screen_from_gameplay_screen(struct gameplay_screen* gameplay_screen) { return &gameplay_screen->screen_p; }
 
 /// The number of screens in the world.
 #define WORLD_SCREEN_COUNT 2
