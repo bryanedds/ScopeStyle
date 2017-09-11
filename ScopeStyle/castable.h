@@ -13,6 +13,9 @@
 /// reflectable & propertied (see ax C++ project),
 /// iterable,
 /// functor,
+/// applicative,
+/// alternative,
+/// monoid,
 /// foldable,
 /// traversable,
 /// and so on.
