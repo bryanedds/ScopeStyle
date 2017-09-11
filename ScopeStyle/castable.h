@@ -10,8 +10,7 @@
 ///
 /// Additional categories include -
 ///
-/// reflectable,
-/// propertied,
+/// reflectable & propertied (see ax C++ project),
 /// iterable,
 /// functor,
 /// foldable,
