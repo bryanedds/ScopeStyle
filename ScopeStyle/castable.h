@@ -65,6 +65,9 @@ bool is_castable(void* ptr);
 /// Should be statically-verifiable when using a custom static code analysis rule.
 void* up_cast(void* ptr);
 
+/// Short-hand for up_cast.
+inline void* uc(void* ptr) { return up_cast(ptr); }
+
 /// Hashes a pointer.
 int hash_ptr(void* ptr);
 
