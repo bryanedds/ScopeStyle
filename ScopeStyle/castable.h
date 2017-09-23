@@ -22,16 +22,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 struct castable;
 
-const char* get_type_name(struct castable*);
-void* try_cast(struct castable*, const char*);
-void* cast(struct castable*, const char*);
-bool try_copy_to(struct castable*, struct castable*);
-bool equal_to(struct castable*, struct castable*);
-int hash(struct castable*);
-
-struct castable
+struct castable_fns
 {
-    int castable_tag_p;
     const char* (*get_type_name_p)(struct castable*);
     void* (*try_cast_p)(struct castable*, const char*);
     bool (*try_copy_to_p)(struct castable*, struct castable*);
@@ -39,18 +31,16 @@ struct castable
     int (*hash_p)(struct castable*);
 };
 
-void initialize_castable_6(
-    struct castable* castable,
-    const char* (*get_type_name)(struct castable*),
-    void* (*try_cast)(struct castable*, const char*),
-    bool (*try_copy_to)(struct castable*, struct castable*),
-    bool (*equal_to)(struct castable*, struct castable*),
-    int (*hash)(struct castable*));
+struct castable
+{
+    int castable_tag_p;
+    struct castable_fns* castable_fns_p;
+};
 
-void initialize_castable(
-    struct castable* castable,
-    const char* (*get_type_name)(struct castable*),
-    void* (*try_cast)(struct castable*, const char*));
+bool try_copy_to_castable(struct castable* left, struct castable* right);
+bool equal_to_castable(struct castable* left, struct castable* right);
+int hash_castable(struct castable* castable);
+void initialize_castable(struct castable* castable, struct castable_fns* castable_fns);
 
 #define CASTABLE_TAG 0xAB3A3854 // CRC32 hash of 'castable'
 

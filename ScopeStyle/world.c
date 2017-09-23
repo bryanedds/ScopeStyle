@@ -15,6 +15,15 @@ void initialize_simulant(
     void* (*try_cast)(struct castable*, const char*),
     const char* name)
 {
+    static struct simulant_fns simulant_fns =
+    {
+        .get_type_name_p = get_type_name,
+        .try_cast_p = try_cast,
+        .try_copy_to_p = try_copy_to_castable,
+        .equal_to_p = equal_to_castable,
+        .hash_p = hash_castable
+    };
+
     initialize_castable(&simulant->castable_p, get_type_name, try_cast);
     strncpy(simulant->name_r, name, SIMULANT_NAME_MAX);
 }

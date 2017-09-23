@@ -19,29 +19,29 @@ static void* try_cast_castable(struct castable* castable, const char* type_name)
     return NULL;
 }
 
-static bool try_copy_to_castable(struct castable* left, struct castable* right)
+bool try_copy_to_castable(struct castable* left, struct castable* right)
 {
     return false;
 }
 
-static bool equal_to_castable(struct castable* left, struct castable* right)
+bool equal_to_castable(struct castable* left, struct castable* right)
 {
     return left == right;
 }
 
-static int hash_castable(struct castable* castable)
+int hash_castable(struct castable* castable)
 {
     return hash_ptr(castable);
 }
 
 const char* get_type_name(struct castable* castable)
 {
-    return castable->get_type_name_p(castable);
+    return castable->castable_fns_p->get_type_name_p(castable);
 }
 
 void* try_cast(struct castable* castable, const char* type_name)
 {
-    return castable->try_cast_p(castable, type_name);
+    return castable->castable_fns_p->try_cast_p(castable, type_name);
 }
 
 void* cast(struct castable* castable, const char* type_name)
@@ -53,41 +53,23 @@ void* cast(struct castable* castable, const char* type_name)
 
 bool try_copy_to(struct castable* left, struct castable* right)
 {
-    return left->try_copy_to_p(left, right);
+    return left->castable_fns_p->try_copy_to_p(left, right);
 }
 
 bool equal_to(struct castable* left, struct castable* right)
 {
-    return left->equal_to_p(left, right);
+    return left->castable_fns_p->equal_to_p(left, right);
 }
 
 int hash(struct castable* castable)
 {
-    return castable->hash_p(castable);
+    return castable->castable_fns_p->hash_p(castable);
 }
 
-void initialize_castable_6(
-    struct castable* castable,
-    const char* (*get_type_name)(struct castable*),
-    void* (*try_cast)(struct castable*, const char*),
-    bool (*try_copy_to)(struct castable*, struct castable*),
-    bool (*equal_to)(struct castable*, struct castable*),
-    int (*hash)(struct castable*))
+void initialize_castable(struct castable* castable, struct castable_fns* castable_fns)
 {
     castable->castable_tag_p = CASTABLE_TAG;
-    castable->get_type_name_p = get_type_name;
-    castable->try_cast_p = try_cast;
-    castable->try_copy_to_p = try_copy_to;
-    castable->equal_to_p = equal_to;
-    castable->hash_p = hash;
-}
-
-void initialize_castable(
-    struct castable* castable,
-    const char* (*get_type_name)(struct castable*),
-    void* (*try_cast)(struct castable*, const char*))
-{
-    initialize_castable_6(castable, get_type_name, try_cast, try_copy_to_castable, equal_to_castable, hash_castable);
+    castable->castable_fns_p = castable_fns;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
